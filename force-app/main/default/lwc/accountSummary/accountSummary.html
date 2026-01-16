@@ -1,0 +1,320 @@
+<template>
+    <lightning-card>
+        <div slot="title" class="card-header">
+            <img src={agentforceIconUrl} alt="Agentforce" class="header-icon">
+            <span class="header-title">Account Summary</span>
+            <span class="header-powered">Powered by Agentforce ✨</span>
+        </div>
+        
+        <div class="slds-p-around_medium">
+            <!-- Initial State -->
+            <template lwc:if={showInitialState}>
+                <div class="initial-state">
+                    <div class="agentforce-branding">
+                        <img src={agentforceIconUrl} alt="Agentforce" class="agentforce-icon-large">
+                    </div>
+                    <h2 class="initial-heading">Get AI-Powered Account Summary</h2>
+                    <p class="initial-description">
+                        Generate an intelligent summary of opportunities, orders, and handoffs with AI-powered insights and recommendations.
+                    </p>
+                    <lightning-button
+                        variant="brand"
+                        label="Summarize ✨"
+                        onclick={handleSummarize}
+                        class="summarize-btn">
+                    </lightning-button>
+                </div>
+            </template>
+
+            <!-- Loading State -->
+            <template lwc:if={isLoading}>
+                <div class="loading-state">
+                    <img src={agentforceIconUrl} alt="Agentforce" class="agentforce-icon-pulse">
+                    <p class="flavor-text">{currentFlavorText}</p>
+                </div>
+            </template>
+
+            <!-- Results State -->
+            <template lwc:if={showResults}>
+                <div class="results-container">
+                    <!-- Header -->
+                    <div class="results-header">
+                        <div class="results-title">
+                            <h1 class="account-name">{data.accountName}</h1>
+                            <template lwc:if={data.accountIndustry}>
+                                <span class="account-industry">{data.accountIndustry}</span>
+                            </template>
+                        </div>
+                        <div class="header-actions">
+                            <lightning-button
+                                variant="neutral"
+                                icon-name="utility:refresh"
+                                label="Refresh"
+                                onclick={handleRefresh}
+                                class="refresh-btn">
+                            </lightning-button>
+                            <lightning-button
+                                variant="neutral"
+                                icon-name="utility:email"
+                                label="Compose"
+                                onclick={handleCompose}
+                                class="compose-btn">
+                            </lightning-button>
+                        </div>
+                    </div>
+
+                    <!-- Metrics Grid -->
+                    <div class="metrics-grid">
+                        <div class="metric-card metric-opportunities">
+                            <div class="metric-icon">
+                                <lightning-icon icon-name="standard:opportunity" size="medium"></lightning-icon>
+                            </div>
+                            <div class="metric-content">
+                                <div class="metric-value">{data.openOpportunities}</div>
+                                <div class="metric-label">Open Opportunities</div>
+                            </div>
+                        </div>
+                        <div class="metric-card metric-pipeline">
+                            <div class="metric-icon">
+                                <lightning-icon icon-name="utility:moneybag" size="medium"></lightning-icon>
+                            </div>
+                            <div class="metric-content">
+                                <div class="metric-value">{data.formattedPipelineValue}</div>
+                                <div class="metric-label">Pipeline Value</div>
+                            </div>
+                        </div>
+                        <div class="metric-card metric-orders">
+                            <div class="metric-icon">
+                                <lightning-icon icon-name="standard:orders" size="medium"></lightning-icon>
+                            </div>
+                            <div class="metric-content">
+                                <div class="metric-value">{data.totalOrders}</div>
+                                <div class="metric-label">Active Orders</div>
+                            </div>
+                        </div>
+                        <div class="metric-card metric-handoffs">
+                            <div class="metric-icon">
+                                <lightning-icon icon-name="utility:task" size="medium"></lightning-icon>
+                            </div>
+                            <div class="metric-content">
+                                <div class="metric-value">{data.totalHandoffs}</div>
+                                <div class="metric-label">Handoffs</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Summary -->
+                    <template lwc:if={data.aiSummary}>
+                        <div class="section-card summary-card">
+                            <div class="section-header">
+                                <lightning-icon icon-name="utility:sparkles" size="small" class="section-icon"></lightning-icon>
+                                <h2>At a Glance</h2>
+                            </div>
+                            <p class="summary-text">{data.aiSummary}</p>
+                        </div>
+                    </template>
+
+                    <!-- Opportunities Section -->
+                    <template lwc:if={hasOpportunities}>
+                        <div class="section-card">
+                            <div class="section-header">
+                                <lightning-icon icon-name="standard:opportunity" size="small" class="section-icon"></lightning-icon>
+                                <h2>Opportunities</h2>
+                                <span class="section-count">{data.openOpportunities} open</span>
+                            </div>
+                            <div class="cards-grid">
+                                <template for:each={processedOpportunities} for:item="opp">
+                                    <div key={opp.id} class="record-card opp-card" data-record-id={opp.id} data-object-type="Opportunity" onclick={navigateToRecord}>
+                                        <div class="card-top">
+                                            <span class={opp.stageClass}>{opp.stageName}</span>
+                                            <span class={opp.statusClass}>{opp.status}</span>
+                                        </div>
+                                        <h3 class="card-title">{opp.name}</h3>
+                                        <div class="card-amount">{opp.formattedAmount}</div>
+                                        <div class="card-details">
+                                            <div class="detail-row">
+                                                <span class="detail-label">Close Date</span>
+                                                <span class={opp.closeDateClass}>{opp.formattedCloseDate}</span>
+                                                <template lwc:if={opp.daysText}>
+                                                    <span class="days-badge">{opp.daysText}</span>
+                                                </template>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="detail-label">Probability</span>
+                                                <div class="probability-bar">
+                                                    <div class="probability-fill" style={opp.probabilityStyle}></div>
+                                                </div>
+                                                <span class="probability-value">{opp.probability}%</span>
+                                            </div>
+                                            <div class="detail-row">
+                                                <span class="detail-label">Owner</span>
+                                                <span class="detail-value">{opp.ownerName}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Orders Section -->
+                    <template lwc:if={hasOrders}>
+                        <div class="section-card">
+                            <div class="section-header">
+                                <lightning-icon icon-name="standard:orders" size="small" class="section-icon"></lightning-icon>
+                                <h2>Orders</h2>
+                                <template lwc:if={data.draftOrders}>
+                                    <span class="section-alert">{data.draftOrders} draft</span>
+                                </template>
+                            </div>
+                            <div class="cards-grid">
+                                <template for:each={processedOrders} for:item="ord">
+                                    <div key={ord.id} class="record-card order-card" data-record-id={ord.id} data-object-type="Order" onclick={navigateToRecord}>
+                                        <div class="card-top">
+                                            <span class={ord.statusClass}>{ord.status}</span>
+                                            <template lwc:if={ord.isDraft}>
+                                                <span class="needs-attention">Needs Action</span>
+                                            </template>
+                                        </div>
+                                        <h3 class="card-title">Order #{ord.orderNumber}</h3>
+                                        <div class="card-amount">{ord.formattedAmount}</div>
+                                        <div class="card-details">
+                                            <div class="detail-row">
+                                                <span class="detail-label">Effective Date</span>
+                                                <span class={ord.effectiveDateClass}>{ord.formattedEffectiveDate}</span>
+                                                <template lwc:if={ord.daysText}>
+                                                    <span class="days-badge">{ord.daysText}</span>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Handoffs Section -->
+                    <template lwc:if={hasHandoffs}>
+                        <div class="section-card">
+                            <div class="section-header">
+                                <lightning-icon icon-name="utility:task" size="small" class="section-icon"></lightning-icon>
+                                <h2>Handoffs</h2>
+                                <template lwc:if={data.pendingHandoffs}>
+                                    <span class="section-count">{data.pendingHandoffs} pending</span>
+                                </template>
+                            </div>
+                            <div class="cards-grid">
+                                <template for:each={processedHandoffs} for:item="h">
+                                    <div key={h.id} class="record-card handoff-card" data-record-id={h.id} data-object-type="Handoff__c" onclick={navigateToRecord}>
+                                        <div class="card-top">
+                                            <span class={h.statusClass}>{h.status}</span>
+                                            <template lwc:if={h.peerReviewStatus}>
+                                                <span class={h.peerReviewClass}>Peer: {h.peerReviewStatus}</span>
+                                            </template>
+                                        </div>
+                                        <h3 class="card-title">{h.name}</h3>
+                                        <template lwc:if={h.orderNumber}>
+                                            <div class="card-subtitle">Order #{h.orderNumber}</div>
+                                        </template>
+                                        
+                                        <!-- Progress Bar -->
+                                        <div class="progress-container">
+                                            <div class="progress-bar">
+                                                <div class="progress-fill" style={h.progressStyle}></div>
+                                            </div>
+                                            <span class="progress-text">{h.progressPercent}%</span>
+                                        </div>
+                                        
+                                        <div class="card-details">
+                                            <template lwc:if={h.productLines}>
+                                                <div class="detail-row">
+                                                    <span class="detail-label">Products</span>
+                                                    <span class="detail-value">{h.productLines}</span>
+                                                </div>
+                                            </template>
+                                            <template lwc:if={h.application}>
+                                                <div class="detail-row">
+                                                    <span class="detail-label">Application</span>
+                                                    <span class="detail-value">{h.application}</span>
+                                                </div>
+                                            </template>
+                                            <template lwc:if={h.hasEngineeringNotes}>
+                                                <div class="engineering-note">
+                                                    <lightning-icon icon-name="utility:note" size="x-small"></lightning-icon>
+                                                    <span>{h.truncatedNotes}</span>
+                                                </div>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Action Items Section -->
+                    <template lwc:if={hasActionItems}>
+                        <div class="section-card action-section">
+                            <div class="section-header">
+                                <lightning-icon icon-name="utility:warning" size="small" class="section-icon action-icon"></lightning-icon>
+                                <h2>Recommended Actions</h2>
+                            </div>
+                            <div class="action-items">
+                                <template for:each={processedActionItems} for:item="action">
+                                    <div key={action.key} class={action.itemClass}>
+                                        <div class="action-header">
+                                            <span class={action.priorityBadgeClass}>{action.priority}</span>
+                                            <span class="action-timeline">{action.timeline}</span>
+                                        </div>
+                                        <h4 class="action-title">{action.title}</h4>
+                                        <p class="action-desc">{action.description}</p>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Key Dates Section -->
+                    <template lwc:if={hasKeyDates}>
+                        <div class="section-card">
+                            <div class="section-header">
+                                <lightning-icon icon-name="utility:date_input" size="small" class="section-icon"></lightning-icon>
+                                <h2>Key Dates</h2>
+                            </div>
+                            <div class="dates-timeline">
+                                <template for:each={processedKeyDates} for:item="kd">
+                                    <div key={kd.key} class="date-item">
+                                        <div class="date-marker">
+                                            <lightning-icon icon-name={kd.iconName} size="x-small"></lightning-icon>
+                                        </div>
+                                        <div class="date-content">
+                                            <span class={kd.dateClass}>{kd.formattedDate}</span>
+                                            <span class="date-desc">{kd.description}</span>
+                                            <template lwc:if={kd.daysAway}>
+                                                <span class="date-days">{kd.daysAway} days</span>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+
+            <!-- Error State -->
+            <template lwc:if={hasError}>
+                <div class="error-state">
+                    <lightning-icon icon-name="utility:error" size="large" class="error-icon"></lightning-icon>
+                    <h3>Error Generating Summary</h3>
+                    <p class="error-message">{errorMessage}</p>
+                    <lightning-button
+                        variant="brand"
+                        label="Retry"
+                        icon-name="utility:refresh"
+                        onclick={handleRetry}>
+                    </lightning-button>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

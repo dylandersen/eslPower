@@ -1,0 +1,277 @@
+/* Main card styling */
+.handoff-card {
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Section cards */
+.section-card {
+    background: #fafaf9;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 1.25rem;
+    transition: box-shadow 0.2s ease;
+}
+
+.section-card:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Section headers */
+.section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #0176d3;
+}
+
+.section-icon {
+    margin-right: 0.5rem;
+    color: #0176d3;
+}
+
+.section-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #181818;
+    margin: 0;
+}
+
+.section-title-small {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #181818;
+    margin: 0;
+}
+
+/* Info items */
+.info-item {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #706e6b;
+    font-size: 0.875rem;
+}
+
+.info-value {
+    color: #181818;
+    font-weight: 500;
+    font-size: 0.9375rem;
+}
+
+.info-meta {
+    color: #706e6b;
+    font-size: 0.875rem;
+}
+
+.order-number {
+    background: #e3f3ff;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-family: 'Salesforce Mono', monospace;
+    font-weight: 600;
+}
+
+/* Spec table */
+.spec-table-container {
+    overflow-x: auto;
+}
+
+.spec-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.spec-table thead {
+    background: linear-gradient(135deg, #0176d3 0%, #005fb2 100%);
+}
+
+.spec-table th {
+    padding: 0.875rem 1rem;
+    text-align: left;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.spec-table th .spec-icon {
+    margin-right: 0.375rem;
+    vertical-align: middle;
+}
+
+.spec-table tbody tr {
+    border-bottom: 1px solid #e5e5e5;
+    transition: background-color 0.2s ease;
+}
+
+.spec-table tbody tr:hover {
+    background-color: #fafaf9;
+}
+
+.spec-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.spec-table td {
+    padding: 1rem;
+    vertical-align: top;
+}
+
+.spec-icon {
+    opacity: 0.9;
+}
+
+.spec-value {
+    color: #181818;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+/* Workflow section */
+.workflow-section {
+    background: linear-gradient(to bottom, #fafaf9 0%, #ffffff 100%);
+    border-left: 4px solid #0176d3;
+}
+
+.workflow-status {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.workflow-label {
+    font-weight: 600;
+    color: #706e6b;
+    font-size: 0.875rem;
+}
+
+.status-badge {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.375rem 0.75rem;
+    border-radius: 12px;
+}
+
+/* Notes sections */
+.notes-section {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 1rem;
+    border-left: 3px solid #0176d3;
+}
+
+.notes-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.notes-icon {
+    color: #0176d3;
+}
+
+.notes-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #181818;
+    margin: 0;
+}
+
+.notes-content {
+    color: #3e3e3c;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Text content */
+.text-content {
+    color: #3e3e3c;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+/* Clickable links */
+.info-link {
+    color: #0176d3;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease, text-decoration 0.2s ease;
+}
+
+.info-link:hover {
+    color: #014486;
+    text-decoration: underline;
+}
+
+.info-link:active {
+    color: #014486;
+}
+
+/* Customer Intent subsection */
+.customer-intent-subsection {
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 1rem;
+    border-left: 3px solid #0176d3;
+}
+
+.subsection-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.subsection-icon {
+    color: #0176d3;
+}
+
+.subsection-title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #181818;
+    margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .section-card {
+        padding: 1rem;
+    }
+    
+    .spec-table {
+        font-size: 0.875rem;
+    }
+    
+    .spec-table th,
+    .spec-table td {
+        padding: 0.75rem 0.5rem;
+    }
+}

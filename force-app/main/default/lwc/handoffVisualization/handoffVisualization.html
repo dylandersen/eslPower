@@ -1,0 +1,221 @@
+<template>
+    <lightning-card title="Engineering Intake" icon-name="standard:orders" class="handoff-card">
+        <div class="slds-p-around_large">
+            <template if:true={loading}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>
+
+            <template if:true={error}>
+                <div class="slds-text-color_error slds-p-around_medium">
+                    <lightning-icon icon-name="utility:error" size="small" class="slds-m-right_x-small"></lightning-icon>
+                    Error loading handoff data. Please refresh the page.
+                </div>
+            </template>
+
+            <template if:false={loading}>
+                <!-- Customer Context Section -->
+                <template if:true={hasCustomerContext}>
+                    <div class="section-card slds-m-bottom_large">
+                        <div class="section-header">
+                            <lightning-icon icon-name="standard:account" size="small" class="section-icon"></lightning-icon>
+                            <h2 class="section-title">Customer Context</h2>
+                        </div>
+                        <div class="slds-grid slds-gutters slds-m-top_medium">
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <div class="info-item">
+                                    <span class="info-label">Account:</span>
+                                    <template if:true={accountId}>
+                                        <a href="#" onclick={handleAccountClick} class="info-link">{accountName}</a>
+                                    </template>
+                                    <template if:false={accountId}>
+                                        <span class="info-value">{accountName}</span>
+                                    </template>
+                                    <template if:true={accountIndustry}>
+                                        <span class="info-meta">| {accountIndustry}</span>
+                                    </template>
+                                </div>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                                <div class="info-item">
+                                    <template if:true={contactName}>
+                                        <span class="info-label">Contact:</span>
+                                        <template if:true={contactId}>
+                                            <a href="#" onclick={handleContactClick} class="info-link">{contactName}</a>
+                                        </template>
+                                        <template if:false={contactId}>
+                                            <span class="info-value">{contactName}</span>
+                                        </template>
+                                        <template if:true={contactTitle}>
+                                            <span class="info-meta">, {contactTitle}</span>
+                                        </template>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        <template if:true={orderNumber}>
+                            <div class="info-item slds-m-top_small">
+                                <span class="info-label">Order Number:</span>
+                                <span class="info-value order-number">{orderNumber}</span>
+                            </div>
+                        </template>
+                        <!-- Customer Intent within Customer Context -->
+                        <template if:true={customerIntent}>
+                            <div class="customer-intent-subsection slds-m-top_large">
+                                <div class="subsection-header">
+                                    <lightning-icon icon-name="standard:feedback" size="x-small" class="subsection-icon"></lightning-icon>
+                                    <h3 class="subsection-title">Customer Intent</h3>
+                                </div>
+                                <div class="info-value slds-m-top_small text-content">{customerIntent}</div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+
+                <!-- Spec Summary Section -->
+                <div class="section-card slds-m-bottom_large">
+                    <div class="section-header">
+                        <lightning-icon icon-name="standard:product" size="small" class="section-icon"></lightning-icon>
+                        <h2 class="section-title">Spec Summary</h2>
+                    </div>
+                    <template if:true={hasSpecData}>
+                        <div class="spec-table-container slds-m-top_medium">
+                            <table class="spec-table">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <lightning-icon icon-name="utility:bolt" size="x-small" class="spec-icon"></lightning-icon>
+                                            Voltage
+                                        </th>
+                                        <th>
+                                            <lightning-icon icon-name="utility:power" size="x-small" class="spec-icon"></lightning-icon>
+                                            Amperage
+                                        </th>
+                                        <th>
+                                            <lightning-icon icon-name="utility:package" size="x-small" class="spec-icon"></lightning-icon>
+                                            Enclosure
+                                        </th>
+                                        <th>
+                                            <lightning-icon icon-name="utility:plug" size="x-small" class="spec-icon"></lightning-icon>
+                                            Connectors
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div class="spec-value">{voltage}</div>
+                                        </td>
+                                        <td>
+                                            <div class="spec-value">{amperage}</div>
+                                        </td>
+                                        <td>
+                                            <div class="spec-value">{enclosure}</div>
+                                        </td>
+                                        <td>
+                                            <div class="spec-value">{connectorType}</div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </template>
+                    <template if:false={hasSpecData}>
+                        <div class="slds-text-body_regular slds-text-color_weak slds-m-top_medium">No specification data available.</div>
+                    </template>
+                </div>
+
+                <!-- Product Lines & Application -->
+                <div class="slds-grid slds-gutters slds-m-bottom_large">
+                    <template if:true={productLines}>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <div class="section-card">
+                                <div class="section-header">
+                                    <lightning-icon icon-name="standard:product_required" size="small" class="section-icon"></lightning-icon>
+                                    <h3 class="section-title-small">Product Lines</h3>
+                                </div>
+                                <div class="info-value slds-m-top_small">{productLines}</div>
+                            </div>
+                        </div>
+                    </template>
+                    <template if:true={application}>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2">
+                            <div class="section-card">
+                                <div class="section-header">
+                                    <lightning-icon icon-name="standard:case" size="small" class="section-icon"></lightning-icon>
+                                    <h3 class="section-title-small">Application</h3>
+                                </div>
+                                <div class="info-value slds-m-top_small">{application}</div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+
+                <!-- Site Conditions -->
+                <template if:true={siteConditions}>
+                    <div class="section-card slds-m-bottom_large">
+                        <div class="section-header">
+                            <lightning-icon icon-name="utility:location" size="small" class="section-icon"></lightning-icon>
+                            <h2 class="section-title">Site Conditions</h2>
+                        </div>
+                        <div class="info-value slds-m-top_small">{siteConditions}</div>
+                    </div>
+                </template>
+
+                <!-- Sales Notes -->
+                <template if:true={salesNotes}>
+                    <div class="section-card slds-m-bottom_large">
+                        <div class="section-header">
+                            <lightning-icon icon-name="standard:note" size="small" class="section-icon"></lightning-icon>
+                            <h2 class="section-title">Sales Notes</h2>
+                        </div>
+                        <div class="info-value slds-m-top_small text-content">{salesNotes}</div>
+                    </div>
+                </template>
+
+                <!-- Engineering Workflow -->
+                <div class="section-card workflow-section">
+                    <div class="section-header">
+                        <lightning-icon icon-name="standard:work_order" size="small" class="section-icon"></lightning-icon>
+                        <h2 class="section-title">Engineering Workflow</h2>
+                    </div>
+                    <div class="slds-grid slds-gutters slds-m-top_medium">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                            <div class="workflow-status">
+                                <span class="workflow-label">Status:</span>
+                                <template if:true={status}>
+                                    <lightning-badge label={status} variant={statusBadgeVariant} class="status-badge"></lightning-badge>
+                                </template>
+                            </div>
+                        </div>
+                        <template if:true={peerReviewStatus}>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-3">
+                                <div class="workflow-status">
+                                    <span class="workflow-label">Peer Review:</span>
+                                    <lightning-badge label={peerReviewStatus} variant={peerReviewBadgeVariant} class="status-badge"></lightning-badge>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                    <template if:true={engineeringNotes}>
+                        <div class="notes-section slds-m-top_large">
+                            <div class="notes-header">
+                                <lightning-icon icon-name="utility:edit" size="x-small" class="notes-icon"></lightning-icon>
+                                <h3 class="notes-title">Engineering Notes</h3>
+                            </div>
+                            <div class="notes-content text-content">{engineeringNotes}</div>
+                        </div>
+                    </template>
+                    <template if:true={peerReviewNotes}>
+                        <div class="notes-section slds-m-top_large">
+                            <div class="notes-header">
+                                <lightning-icon icon-name="utility:check" size="x-small" class="notes-icon"></lightning-icon>
+                                <h3 class="notes-title">Peer Review Notes</h3>
+                            </div>
+                            <div class="notes-content text-content">{peerReviewNotes}</div>
+                        </div>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>
