@@ -46,3 +46,8 @@ $RECYCLE.BIN/
 **/__pycache__/
 **/.venv/
 **/venv/
+
+.cusorrules
+.forceignore
+.prettier*
+engineering-handoff.md
