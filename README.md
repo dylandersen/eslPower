@@ -1,6 +1,6 @@
 # ESL Power - Account Summary Lightning Web Component
 
-An AI-powered Salesforce Lightning Web Component that provides intelligent account summaries with actionable insights, visual dashboards, and seamless email composition capabilities.
+An Agentforce-powered Salesforce Lightning Web Component that provides intelligent account summaries with actionable insights, visual dashboards, and seamless email composition capabilities.
 
 ## 🎯 What We Built
 
@@ -25,17 +25,17 @@ The solution follows a clean separation of concerns:
 
 ```
 ┌─────────────────────────────────────────┐
-│   Lightning Web Component (LWC)        │
+│   Lightning Web Component (LWC)         │
 │   - UI Rendering                        │
-│   - User Interactions                  │
-│   - State Management                   │
+│   - User Interactions                   │
+│   - State Management                    │
 └──────────────┬──────────────────────────┘
                │
                ▼
 ┌─────────────────────────────────────────┐
-│   Apex Controller                        │
+│   Apex Controller                       │
 │   - Data Aggregation                    │
-│   - AI Integration                     │
+│   - Agentforce Integration              │
 │   - Email Body Generation               │
 └──────────────┬──────────────────────────┘
                │
@@ -46,23 +46,6 @@ The solution follows a clean separation of concerns:
 │   Database   │  │  Models API  │
 └──────────────┘  └──────────────┘
 ```
-
-### Technology Stack
-
-- **Frontend**: Lightning Web Components (LWC)
-  - Lightning Design System (SLDS)
-  - CSS Grid & Flexbox for responsive layouts
-  - CSS animations for enhanced UX
-  
-- **Backend**: Apex
-  - SOQL queries for data aggregation
-  - Salesforce Models API integration
-  - Structured data processing
-  
-- **AI Integration**: Salesforce AI Platform
-  - `aiplatform.ModelsAPI` for text generation
-  - JSON-structured prompts and responses
-  - Context-aware summarization
 
 ### Component Structure
 
@@ -84,30 +67,7 @@ AccountSummaryController.cls
 ├── buildAIPrompt()         # AI prompt construction
 ├── getAIInsights()         # AI API integration
 └── generateEmailBody()    # Email content generation
-```
 
-## 💡 Value Proposition
-
-### For Sales Teams
-- **Time Savings**: Get comprehensive account overviews in seconds instead of manually reviewing multiple records
-- **Better Context**: Understand account status, pipeline health, and next steps at a glance
-- **Improved Communication**: One-click email composition with pre-formatted summaries for stakeholders
-
-### For Account Managers
-- **Holistic View**: See opportunities, orders, and engineering handoffs in one place
-- **Proactive Insights**: AI-generated recommendations help identify bottlenecks and next actions
-- **Visual Clarity**: Dashboard-style presentation makes complex data easily digestible
-
-### For Engineering Teams
-- **Handoff Visibility**: Track engineering handoff progress and status
-- **Context Awareness**: Understand account context when reviewing handoff records
-- **Timeline Awareness**: Key dates help prioritize work
-
-### Business Impact
-- **Reduced Context Switching**: No need to navigate between multiple records
-- **Faster Decision Making**: AI insights surface critical information immediately
-- **Improved Collaboration**: Easy sharing of account summaries via email
-- **Data-Driven Actions**: Metrics and recommendations guide next steps
 
 ## 🚀 Getting Started
 
@@ -180,15 +140,6 @@ Edit the `buildAIPrompt()` method in `AccountSummaryController.cls` to customize
 
 Modify `accountSummary.css` to match your org's branding. The component uses CSS variables for easy theme customization.
 
-## 🎨 UI Features
-
-- **Responsive Design**: Works on desktop, tablet, and mobile
-- **Loading States**: Animated loading indicators with dynamic flavor text
-- **Error Handling**: User-friendly error messages with retry options
-- **Navigation**: Click record cards to navigate to detail pages
-- **Badges & Indicators**: Color-coded status badges and progress bars
-- **Animations**: Smooth transitions and pulsing effects
-
 ## 📊 Data Flow
 
 1. User clicks "Summarize"
@@ -213,9 +164,7 @@ This project is provided as-is for demonstration purposes.
 ## 🙏 Acknowledgments
 
 - Built with Salesforce Lightning Web Components
-- Powered by Salesforce AI Platform
+- Powered by Agentforce
 - Uses Lightning Design System for UI components
 
 ---
-
-**Built with ❤️ for ESL Power**
